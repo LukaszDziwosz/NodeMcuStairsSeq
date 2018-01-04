@@ -1,6 +1,8 @@
+// LED stairs sequence by Lukasz Dziwosz 2018
+
 
 #include <Arduino.h>
-//#include <ESP8266WiFi.h>
+//#include <ESP8266WiFi.h> // will add Alexa soon
 //#include "fauxmoESP.h"
 
 #define SERIAL_BAUDRATE 115200
