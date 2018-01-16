@@ -1,5 +1,5 @@
 // LED stairs sequence by Lukasz Dziwosz 2018 for NodeMCU coded in Arduino IDE
-// Amazon Alexa enabled, 2 PIR sensor
+// Amazon Alexa enabled, 2 PIR(motion) sensors
 
 #include <Arduino.h>
 #include <ESP8266WiFi.h> //enabling wifi on NodeMCU
@@ -30,7 +30,7 @@ Serial.begin(SERIAL_BAUDRATE);
 //setup and wifi connection
  wifiSetup();
 
-//Set PIR pins to outputs 
+//Set PIR pins to inputs 
  pinMode(motion1, INPUT);
  pinMode(motion2, INPUT);
 
