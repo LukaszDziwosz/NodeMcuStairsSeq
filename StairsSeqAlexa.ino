@@ -7,7 +7,7 @@
 
 /* Network credentials */
 #define WIFI_SSID "YOURNETWORK"
-#define WIFI_PASS "YOURPASSWORD"  
+#define WIFI_PASS "PASSWORD"  
 
 /* Serial Monitor*/
 #define SERIAL_BAUDRATE 115200
@@ -37,8 +37,8 @@ Serial.begin(SERIAL_BAUDRATE);
 //Set relay pins to outputs
  for (int thisPin = 0; thisPin < pinCount; thisPin++) {
     pinMode(relayPins[thisPin], INPUT_PULLUP);
-    pinMode(relayPins[thisPin], OUTPUT);//shuold default as HIGH so relays off
-   // digitalWrite(relayPins[thisPin], HIGH); //start as relay off if connected to NO(normally open)
+    pinMode(relayPins[thisPin], OUTPUT);
+    digitalWrite(relayPins[thisPin], HIGH); //start as relay off if connected to NO(normally open)
   }
 
 // Device Names for Simulated Wemo switches
@@ -51,26 +51,18 @@ Serial.begin(SERIAL_BAUDRATE);
 void loop() {
 // put your main code here, to run repeatedly:
 
- fauxmo.handle();
+ //fauxmo.handle();
 
  int sensor1 = digitalRead(motion1); //declaring variable to hold sensor data
  int sensor2 = digitalRead(motion2);
-  
- if(sensor1 == HIGH && sensor2 == HIGH){ //unlikely scenario
-        for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-    digitalWrite(relayPins[thisPin], LOW); //  relays all on
-        }
-        delay(60000);
-         for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-    digitalWrite(relayPins[thisPin], HIGH); //  relays all off
-        }
-  }else if(sensor1 == HIGH && sensor2 == LOW){ //bottom sensor
+
+ if(sensor1 == HIGH && sensor2 == LOW){ //bottom sensor
     Serial.println("Bottom sensor triggered"); 
     for (int thisPin = 0; thisPin < pinCount; thisPin++) {
     digitalWrite(relayPins[thisPin], LOW); // energize relays until all on
     delay(500);
   }
-  delay(50000); // stay on for 50 seconds going up
+  delay(10000); // stay on for 10 seconds going up
   for (int thisPin = 0; thisPin < pinCount; thisPin++) {
   digitalWrite(relayPins[thisPin], HIGH); // de-energize relays until all off
   delay(500);
@@ -82,17 +74,15 @@ void loop() {
     digitalWrite(relayPins[thisPin], LOW); // energize relays until all on
     delay(500);
   }
-  delay(70000); // stay on for 70 seconds going down
+  delay(10000); // stay on for 10 seconds going down
   for (int thisPin = 8; thisPin >= 0; thisPin--){
   digitalWrite(relayPins[thisPin], HIGH); // de-energize relays until all off
   delay(500);
   }
   delay(50); // little delay to avoid bouncing
     }else{
-    for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-    digitalWrite(relayPins[thisPin], HIGH); //  relays all off
-   // delay(1000);
-   }
+ 
+   fauxmo.handle();
   }
 
 }
@@ -107,34 +97,18 @@ void callback(uint8_t device_id, const char * device_name, bool state)
  if (state)  
  { 
    Serial.println("ON"); 
-   for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-    digitalWrite(relayPins[thisPin], LOW); //  relays all on
-        } //Stairs are ON as all connected to NC on the relays.
+    for (int thisPin = 0; thisPin < pinCount; thisPin++) {
+    digitalWrite(relayPins[thisPin], LOW); 
+    delay(500);
+        }
    
  }  
  else  
  { 
    Serial.println("OFF"); 
-    for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-    digitalWrite(relayPins[thisPin], HIGH); //  relays all off
-        }
- } 
- 
- //Switching action on detection of device name 
- if ( (strcmp(device_name, "Oskar's Lamp") == 0) )  
- { 
-   if (!state)  
-   { 
-      for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-    digitalWrite(relayPins[thisPin], LOW); //  relays all on
-        } //Stairs are ON as all connected to NC(normally close) on the relays.
-   }  
-   else  
-   { 
-     for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-    digitalWrite(relayPins[thisPin], HIGH); //  relays all off
-        }
-   } 
+   for (int thisPin = 0; thisPin < pinCount; thisPin++) {
+    digitalWrite(relayPins[thisPin], HIGH); 
+        } 
  } 
  
 }
@@ -166,6 +140,3 @@ void wifiSetup()
    Serial.println();
    
 }
-
-
-
