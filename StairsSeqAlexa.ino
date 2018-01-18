@@ -7,7 +7,7 @@
 
 /* Network credentials */
 #define WIFI_SSID "YOURNETWORK"
-#define WIFI_PASS "PASSWORD"  
+#define WIFI_PASS "WIFIPASSWORD"  
 
 /* Serial Monitor*/
 #define SERIAL_BAUDRATE 115200
@@ -58,33 +58,38 @@ void loop() {
 
  if(sensor1 == HIGH && sensor2 == LOW){ //bottom sensor
     Serial.println("Bottom sensor triggered"); 
-    for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-    digitalWrite(relayPins[thisPin], LOW); // energize relays until all on
-    delay(500);
-  }
-  delay(10000); // stay on for 10 seconds going up
-  for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-  digitalWrite(relayPins[thisPin], HIGH); // de-energize relays until all off
-  delay(500);
-  }
-  delay(50); // little delay to avoid bouncing
+    sequenceUp();
   }else if(sensor1 == LOW && sensor2 == HIGH){ //top to bottom
     Serial.println("Top sensor triggered");
-    for (int thisPin = 8; thisPin >= 0; thisPin--) {
-    digitalWrite(relayPins[thisPin], LOW); // energize relays until all on
-    delay(500);
+    sequenceDown();
+    }else{
+ fauxmo.handle();
   }
-  delay(10000); // stay on for 10 seconds going down
+}
+/* --------------------------------------------------------------------------- 
+Light Sequence Methods
+----------------------------------------------------------------------------*/ 
+void sequenceUp(){
+ for (int thisPin = 0; thisPin < pinCount; thisPin++) {
+    digitalWrite(relayPins[thisPin], LOW); // energize relays until all on
+    delay(250);}
+ delay(40000); // stay on for 10 seconds going up
+ for (int thisPin = 0; thisPin < pinCount; thisPin++) {
+    digitalWrite(relayPins[thisPin], HIGH); // de-energize relays until all off
+    delay(250);}
+  delay(50); // little delay to avoid bouncing  
+}
+void sequenceDown(){
+  for (int thisPin = 8; thisPin >= 0; thisPin--) {
+    digitalWrite(relayPins[thisPin], LOW); // energize relays until all on
+    delay(250);
+  }
+  delay(40000); // stay on for 10 seconds going down
   for (int thisPin = 8; thisPin >= 0; thisPin--){
   digitalWrite(relayPins[thisPin], HIGH); // de-energize relays until all off
-  delay(500);
+  delay(250);
   }
   delay(50); // little delay to avoid bouncing
-    }else{
- 
-   fauxmo.handle();
-  }
-
 }
 
 /* --------------------------------------------------------------------------- 
@@ -97,17 +102,15 @@ void callback(uint8_t device_id, const char * device_name, bool state)
  if (state)  
  { 
    Serial.println("ON"); 
-    for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-    digitalWrite(relayPins[thisPin], LOW); 
-    delay(500);
-        }
-   
+   for (int thisPin = 0; thisPin < pinCount; thisPin++) {
+   digitalWrite(relayPins[thisPin], LOW); 
+    } 
  }  
  else  
  { 
    Serial.println("OFF"); 
    for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-    digitalWrite(relayPins[thisPin], HIGH); 
+   digitalWrite(relayPins[thisPin], HIGH); 
         } 
  } 
  
