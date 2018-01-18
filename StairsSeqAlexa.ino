@@ -17,10 +17,11 @@ fauxmoESP fauxmo;
 
 /* Set Relay Pins and PIR pins*/
 int relayPins[] = {16, 5, 4, 0, 2, 14, 12, 13, 15};       // an array of pin numbers to which relays are attached
+// pins D0(GPIO16), D1,...D8 on NodeMCU, please refer to pinout image.
 int pinCount = 9;  // the number of pins (i.e. the length of the array)
 
-const int motion1 = 10; // pir sensors pins
-const int motion2 = 9;
+const int motion1 = 10; // pir sensors pins, pin SDD3(GPIO10) on NodeMcu
+const int motion2 = 9; // pni SDD2(GPIO9)
 
 void setup() {
   
@@ -72,8 +73,8 @@ Light Sequence Methods
 void sequenceUp(){
  for (int thisPin = 0; thisPin < pinCount; thisPin++) {
     digitalWrite(relayPins[thisPin], LOW); // energize relays until all on
-    delay(250);}
- delay(40000); // stay on for 10 seconds going up
+    delay(250);} //quarter of a second delay adjust if needed
+ delay(10000); // stay on for 10 seconds going up
  for (int thisPin = 0; thisPin < pinCount; thisPin++) {
     digitalWrite(relayPins[thisPin], HIGH); // de-energize relays until all off
     delay(250);}
@@ -84,7 +85,7 @@ void sequenceDown(){
     digitalWrite(relayPins[thisPin], LOW); // energize relays until all on
     delay(250);
   }
-  delay(40000); // stay on for 10 seconds going down
+  delay(10000); // stay on for 10 seconds going down
   for (int thisPin = 8; thisPin >= 0; thisPin--){
   digitalWrite(relayPins[thisPin], HIGH); // de-energize relays until all off
   delay(250);
